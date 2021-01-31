@@ -141,5 +141,5 @@ while(true){
     time.wait(t);
     canvas("clearRect(0,0,1920,1080)");
     for(b of balls) b.collisionChecked = false;
-    
+    let x = 1+1;
 }
