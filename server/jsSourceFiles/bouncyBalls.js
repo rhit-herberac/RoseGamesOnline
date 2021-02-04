@@ -1,4 +1,4 @@
-let t = 50;
+let t = 50
 
 class ball{
     x=-1;
