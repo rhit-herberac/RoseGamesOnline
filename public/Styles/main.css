@@ -1,0 +1,103 @@
+.topNavbar {
+    background: #800000;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.navbarTitle {
+    color: white;
+    margin: 0;
+    font-size: 50px;
+}
+.navbarNavigation {
+    color: white;
+    padding: 0 10px;
+}
+body {
+    margin: 0;
+}
+
+#reportButton {
+    color: #800000;
+    font-size: xx-large;
+}
+
+#commentsTitle {
+    font-size: xx-large;
+    font-weight: 1000;
+    padding-right: 15px;
+}
+
+#gameTitle {
+    margin-top: 75px;
+}
+
+#canvasArea {
+    grid-area: game;
+}
+
+#scoreBoardContainer {
+    grid-area: score;
+    margin: 0 10px;
+}
+
+#scoreBoardCategoryContainer {
+    background: #800000;
+    display: grid;
+    grid-template-areas: "cat1 cat2 cat3 cat4";
+    grid-template-columns: auto auto auto auto;
+}
+
+#cat1 {
+    color: white;
+    grid-area: cat1;
+    text-align: center;
+    border-right: 2px solid black;
+    margin: 0;
+    font-size: x-large;
+}
+
+#cat2 {
+    color: white;
+    grid-area: cat2;
+    text-align: center;
+    border-right: 2px solid black;
+    margin: 0;
+    font-size: x-large;
+}
+
+#cat3 {
+    color: white;
+    grid-area: cat3;
+    text-align: center;
+    border-right: 2px solid black;
+    margin: 0;
+    font-size: x-large;
+}
+
+#cat4 {
+    color: white;
+    grid-area: cat4;
+    text-align: center;
+    margin: 0;
+    font-size: x-large;
+}
+
+#scoreBoardEntryContainer {
+    background: white;
+    height: 35vw;
+}
+
+#scoreBoardBody {
+    padding: 10px 5px;
+    background: gray;
+}
+
+#gameAndScore {
+    display: grid;
+    width: 100%;
+    grid-template-areas: "game score";
+    grid-template-columns: auto 33%;
+}
