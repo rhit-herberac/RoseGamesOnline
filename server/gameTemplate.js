@@ -11,22 +11,22 @@ exports.run = (canvas, alert, cursor, inputs, end, debug) => {
         //controller to determine time since program execution, as well as delay/wait/sleep (within thread)
         class time {
             static get time() {
-                return Date.now()-time._time;
+                return Date.now()-time.#time;
             }
 
             static get start(){
-                return time._time;
+                return time.#time;
             }
 
             static construct() {
-                time._time = Date.now();
+                time.#time = Date.now();
 
                 time.wait = function (ms) {
                     let o = Date.now();
                     while (Date.now() < (o + ms)) {let temp = 62*112; /*this is so that the thread doesn't overload and crash the server, because that has happened. It's just a random statement that's guaranteed to take up a few cpu cycles.*/}
                 }
             }
-            //verification will throw error if any attempt to access _time is found
+            //verification will throw error if any attempt to access #time is found
         };
 
         time.construct();

@@ -18,35 +18,35 @@ let startGame = false;
         //Note: gonna convert this to a sharedBufferArray for multithreading, brb
         class inputs {
             static resetInputs(){
-                for(let i = 0; i < inputs._mousebtn.length; i++)
-                    inputs._mousebtn[i] = 0;
-                for(let i = 0; i < inputs._key.length; i++)
-                    inputs._key[i] = 0;
-                for(let i = 0; i < inputs._mousepos.length; i++)
-                    inputs._mousepos[i] = 0;
-                for(let i = 0; i < inputs._input.length; i++)
-                    inputs._input[i] = 0;
+                for(let i = 0; i < inputs.#mousebtn.length; i++)
+                    inputs.#mousebtn[i] = 0;
+                for(let i = 0; i < inputs.#key.length; i++)
+                    inputs.#key[i] = 0;
+                for(let i = 0; i < inputs.#mousepos.length; i++)
+                    inputs.#mousepos[i] = 0;
+                for(let i = 0; i < inputs.#input.length; i++)
+                    inputs.#input[i] = 0;
 
             }
 
             static _initialize(){
                 let tmp = msg.buffers;
-                inputs._mousebtn = new Int8Array(tmp.mouseB);
-                inputs._key = new Int8Array(tmp.keyB);
-                inputs._mousepos = new Float64Array(tmp.mouseposB);
-                inputs._input = new Int8Array(tmp.inputB);
+                inputs.#mousebtn = new Int8Array(tmp.mouseB);
+                inputs.#key = new Int8Array(tmp.keyB);
+                inputs.#mousepos = new Float64Array(tmp.mouseposB);
+                inputs.#input = new Int8Array(tmp.inputB);
                 inputs.resetInputs();
             }
 
             //inputB[4]
             static get hasFocus() {
-                return inputs._input[4] == 1 ? true : false;
+                return inputs.#input[4] == 1 ? true : false;
             }
 
             static get mousePresses() {
                 let temp = new Array();
-                for(let i = 0; i < inputs._mousebtn.length; i++)
-                    if(inputs._mousebtn[i] > 0)
+                for(let i = 0; i < inputs.#mousebtn.length; i++)
+                    if(inputs.#mousebtn[i] > 0)
                         temp.push(i);
                 //console.log(temp);
                 return temp;
@@ -55,8 +55,8 @@ let startGame = false;
             //keyB
             static get keyPresses() {
                 let temp = new Array();
-                for(let i = 0; i < inputs._key.length; i++)
-                    if(inputs._key[i] > 0)
+                for(let i = 0; i < inputs.#key.length; i++)
+                    if(inputs.#key[i] > 0)
                         temp.push(i);
                 
                 return temp;
@@ -64,32 +64,32 @@ let startGame = false;
 
             //inputB[0]
             static get scrollX() {
-                return inputs._input[0];
+                return inputs.#input[0];
             }
 
             //inputB[1]
             static get scrollY() {
-                return inputs._input[1];
+                return inputs.#input[1];
             }
 
             //inputB[2]
             static get scrollZ() {
-                return inputs._input[2];
+                return inputs.#input[2];
             }
 
             //inputB[3]
             static get scrollMode() {
-                return inputs._input[3];
+                return inputs.#input[3];
             }
 
             //mouseposB[0]
             static get mouseX() {
-                return inputs._mousepos[0];
+                return inputs.#mousepos[0];
             }
 
             //mouseposB[1]
             static get mouseY() {
-                return inputs._mousepos[1];
+                return inputs.#mousepos[1];
             }
         }
 
@@ -103,24 +103,38 @@ else {
     }
 
     //gets source js filename if exists, or returns null
-    function getFile() {
+    function _getFile() {
         if (msg && msg.client && msg.file && fs.existsSync("./jsSourceFiles/" + msg.file + ".js"))
             return "./jsSourceFiles/" + msg.file + ".js";
         else return null;
     }
 
     //gets tmp js filename if exists, or returns null
-    function getTmpFile() {
+    function _getTmpFile() {
         let newFile = "./jsTempFiles/" + msg.file + "-" + msg.client.replace(":", ".") + ".js";
         if (msg && msg.client && msg.file && fs.existsSync(newFile))
             return newFile;
         else return null;
     }
 
+    //sanatizes strings to prevent SQL injection attacks. Only works for alert() because canvas() isn't handled as a string, but rather a canvas command.
+    //Note: inline code like ${this} is checked in the verification process, like most of the rest of the code.
+    function santitze(cmd){
+        let r = "";
+        let prev = null;
+        for (c of cmd){
+            if(prev != "\\")
+                if(c == "'" || c == "\"" || c == "`")
+                    r = r + "\\";
+            else if(c == "\\"){
+                prev = null;
+            }
+            r = r + c;
+        }
+        return r;
+    }
+
     try {
-
-        
-
         //file contained within a Worker class. this=Worker
 
         function canvas(func) {
@@ -129,7 +143,7 @@ else {
         }
         function alert(func) {
             //NOTE: VERIFICATION WILL HAVE TO ENSURE INJECTION ATTACKS DON'T HAPPEN WITH THIS CANVAS CALL!!!
-            _srvMsg("send", "alert alert(\"" + func + "\");");
+            _srvMsg("send", "alert alert(\"" + sanitize(func) + "\");");
         }
 
         function end() {
@@ -150,10 +164,10 @@ else {
         }
 
         //creates temporary js file to enable client to play game
-        function makeFile() {
+        function _makeFile() {
             _srvMsg("load");
 
-            if (getFile()) {
+            if (_getFile()) {
                 let newFile = "./jsTempFiles/" + msg.file + "-" + msg.client.replace(":", ".") + ".js";
                 let srcFile = "./jsSourceFiles/" + msg.file + ".js";
                 if (fs.existsSync(newFile)) fs.rmSync(newFile);
@@ -172,7 +186,7 @@ else {
 
 
         //runs game if temporary file is properly made
-        async function runGame(game) {
+        async function _runGame(game) {
             if (game) {
                 let g = require(game);
                 if (g) {
@@ -205,10 +219,10 @@ else {
                 //_srvMsg("msg", temp);
                 switch (t[0]) {
                     case "restart": case "run":
-                        runGame(makeFile());
+                        _runGame(_makeFile());
                         break;
                     case "delete":
-                        let f = getTmpFile();
+                        let f = _getTmpFile();
                         if (f)
                             fs.rmSync(f);
                         _srvMsg("delete");
