@@ -193,6 +193,6 @@ process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
 
 const port = 3000;
-const host = '137.112.137.213';
+const host = 'rosegamesonline.csse.rose-hulman.edu';
 server.listen(port, host);
 console.log(`Listening at http://${host}:${port}`);
