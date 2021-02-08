@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://137.112.137.213:8081");
+const socket = new WebSocket("ws://rosegamesonline.csse.rose-hulman.edu:8081");
 const canvas = document.getElementById("canvas").getContext("2d");
 let id = null;
 let file = new URLSearchParams(window.location.search).get('id');
