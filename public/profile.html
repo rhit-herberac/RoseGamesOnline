@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles/main.css">
+    
+</head>
+
+<body>
+    <nav class="topNavbar">
+        <div id="navbarLeft">
+            <h1 class="navbarTitle">Rose Games Online</h1>
+            <div id="navButtons">
+                <a class="navbarNavigation">Main</a>
+                <a class="navbarNavigation">Browse</a>
+                <a class="navbarNavigation">Create</a>
+            </div>
+        </div>
+        <div id="navbarRight">
+            <a class="navbarNavigation">Profile</a>
+            <a href="signup.html" class="navbarNavigation">Sign Up</a>
+        </div>
+    </nav>
+
+    <div id="profileContainer">
+        <img id="profilePic" src="images/missing.png"></img>
+        <p id="usernameDisplay">NOT_A_USER</p>
+        <button id="friendsButton">Friends List</button>
+        <div id="profileInfo">
+            <div id="infoLinks">
+                <h2 id="basicInfo">Basic Info</h2>
+                <p id="myGamesButton">My Games</p>
+            </div>
+            <div id="updateLabels">
+                <p>
+                    Current Password<br>
+                    New Password<br>
+                    Email
+                </p>
+            </div>
+            <div id="updateInfo">
+                <input id="updateOldPass" type="password" placeholder="CURRENT_PASSWORD">
+                <br>
+                <input id="updateNewPass" type="password" placeholder="">
+                <br>
+                <input id="updateEmail" type="text" placeholder="CURRENT_EMAIL">
+                <br>
+                <button id="updateInfoButton">Update details</button>
+            </div>
+        </div>
+        <button id="deleteAccountButton">Delete Account</button>
+    </div>
+</body>
+
+</html>

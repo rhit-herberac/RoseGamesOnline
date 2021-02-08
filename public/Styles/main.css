@@ -4,19 +4,35 @@
     width: 100%;
     left: 0;
     top: 0;
+    display: grid;
+    grid-template-areas: "leftSide rightSide";
 }
 
 .navbarTitle {
     color: white;
     margin: 0;
     font-size: 50px;
+    font-family: 'Roboto', sans-serif;
 }
+
 .navbarNavigation {
     color: white;
     padding: 0 10px;
+    font-family: 'Roboto', sans-serif;
 }
 body {
     margin: 0;
+}
+
+#navbarLeft {
+    grid-area: leftSide;
+    text-align: left;
+}
+
+#navbarRight {
+    grid-area: rightSide;
+    text-align: right;
+    padding-top: 5px;
 }
 
 #reportButton {
@@ -100,4 +116,145 @@ body {
     width: 100%;
     grid-template-areas: "game score";
     grid-template-columns: auto 33%;
+}
+
+#loginTitle {
+    text-align: center;
+    margin-top: 35vh;
+    font-family: 'Roboto', sans-serif;
+}
+
+#inputUsername {
+    font-size: 1.6em;
+    margin-bottom: 10px;
+}
+
+#inputPassword {
+    font-size: 1.6em;
+}
+
+button {
+    font-size: 1.2em;
+    background: #800000;
+    color: white;
+    border-width: 0;
+    padding: 3px 6px;
+}
+
+#loginButtons {
+    text-align: center;
+}
+
+#forgetPassword {
+    color: #800000;
+    margin-left: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+#loginTextBoxes {
+    text-align: center;
+}
+
+#resetPrompt {
+    margin-top: 35vh;
+    text-align: center;
+}
+
+#resetInstruct > a {
+    font-size: larger;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+#inputEmail {
+    font-size: 1.6em;
+    margin: 20px 0;
+}
+
+img {
+    border-radius: 50%;
+    width: 33vh;
+    max-height: 33vh; 
+}
+
+#profileContainer {
+    margin-top: 15vh;
+    text-align: center;
+}
+
+#usernameDisplay {
+    font-family: 'Roboto', sans-serif;
+    font-size: larger;
+}
+
+#friendsButton, #deleteAccountButton {
+    padding: 3px 50px;
+}
+
+#profileInfo {
+    margin: 25px 0;
+    display: grid;
+    grid-template-areas: "info labels update"
+                         "info labels update"
+                         "info labels update";
+    grid-template-columns: 50% 15% auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+#infoLinks {
+    grid-area: info;
+}
+
+#updateInfo {
+    grid-area: update;
+    padding-top: 5px;
+    text-align: left;
+}
+
+#updateInfo > input {
+    margin-bottom: 10px;
+    font-size: 1.6em;
+}
+
+#updateLabels {
+    grid-area: labels;
+}
+
+#updateLabels > p {
+    line-height: 290%;
+    margin: 0;
+}
+
+#myGamesButton {
+    color: #800000;
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+#friendPage {
+    margin-top: 15vh;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+#friendPage > button {
+    padding: 3px 50px;
+    margin-bottom: 25px;
+}
+
+#friendContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#friendContainer > div {
+    margin : 15px 30px;
+}
+
+.makeRed {
+    color: #800000;
 }
