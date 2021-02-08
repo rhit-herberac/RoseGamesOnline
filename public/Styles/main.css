@@ -4,19 +4,27 @@
     width: 100%;
     left: 0;
     top: 0;
+    z-index: 9999999;
 }
 
 .navbarTitle {
     color: white;
     margin: 0;
     font-size: 50px;
+    
 }
 .navbarNavigation {
     color: white;
     padding: 0 10px;
 }
+
+#mainPage{
+    margin-top: 100px;
+}
+
 body {
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #reportButton {
@@ -28,10 +36,6 @@ body {
     font-size: xx-large;
     font-weight: 1000;
     padding-right: 15px;
-}
-
-#gameTitle {
-    margin-top: 75px;
 }
 
 #canvasArea {
