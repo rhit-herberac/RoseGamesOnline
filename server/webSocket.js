@@ -197,9 +197,9 @@ wss.on('close', process.exit);
 function exitHandler(options, exitCode) {
   if (options.cleanup) {
     console.log("Server close");
-    for (ws of wss.clients) {
-      ws.send("shutdown");
-      ws.close();
+    for (let ww of wss.clients) {
+      ww.send("shutdown");
+      ww.close();
     }
     fs.rmSync("./jsTempFiles/", { recursive: true });
   }

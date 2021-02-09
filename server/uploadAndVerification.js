@@ -7,6 +7,54 @@ function throwError(err) {
     console.log("This is a temporary error check. Error: " + err);
 }
 
+class Node{
+    parent = null
+    children = []
+    val = null
+    constructor(v = null, p = null){
+        this.val = v;
+        this.parent = p;
+    }
+}
+
+class abcTree{
+    root = new Node();
+    
+    constructor(v){
+        let j = v;
+        //console.log(j);
+        let c = this.root;
+        for(let b = 0; b < j.length; b++){
+            let w = j[b];
+            for(let k of w){
+                let l = k.toLowerCase();
+                let i = l.charCodeAt(0)
+                if(c.children[i] == null){
+                    c.children[i] = new Node(l, c);
+                }
+                c = c.children[i];
+            }
+            c = this.root;
+        }
+    }
+
+    searchFor(str){
+        let a = root;
+        for(let c of str){
+            let l = c.toLowerCase();
+            let i = l.charCodeAt(0)
+            if(a[i] != null){
+                a = a[i];
+            }
+            else return false;
+        }
+        return true;
+    }
+}
+
+const bannedKeywords =  new abcTree(fs.readFileSync("bannedKeywordsAndAPIs.json", 'utf-8'))//all banned keywords in NodeJS and web JS
+const allowedKeywords = new abcTree(fs.readFileSync("allowedKeywords.json", 'utf-8'))
+
 class codeScope {
     stack = [];
     lineNums = [];
@@ -59,8 +107,7 @@ function checkCode(code) {
     console.log("Checking code");
     //let c = code.replace(/[\r\n]+\n/g, ";").trim();
 
-    const bannedKeywords = ["require", "exports", "console", "_time", "document", "window", "_mousepos", "_key", "_mousebtn", "_input", "_srvMsg", "_initialize"] //all banned keywords in NodeJS and web JS
-    const allowedKeywords = ["alert", "canvas", "time", "cursor", "inputs", "end", "debug", "Math", "RegExp"]
+    
     //first step is to reconstruct code into codeStack
     let prevChar = null;
     let inString = [];

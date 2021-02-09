@@ -17,6 +17,13 @@ let startGame = false;
         //minus: continuous data sent from client, bigish data size
         //Note: gonna convert this to a sharedBufferArray for multithreading, brb
         class inputs {
+
+            //ES6 has private fields now, this is how to declare them
+            static #mousebtn = null;
+            static #key = null;
+            static #mousepos = null;
+            static #input = null;
+
             static resetInputs(){
                 for(let i = 0; i < inputs.#mousebtn.length; i++)
                     inputs.#mousebtn[i] = 0;

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../main.css">
+        <script src="../scripts/headerGet.js"></script>
+        <script src="codeEdit.js"></script>
+    </head>
+    <body>
+        <nav class="topNavbar" id="head">
+        
+        </nav>
+        <canvas style="width: 1920; height: 1080;" width="1920" height="1080" id="canvas"></canvas>
+        <div id="status">null</div>
+        <button onclick="stop()">Stop</button>
+        <button onclick="start()">Start</button>
+
+        <script type="text/javascript" src="../scripts/gameServe.js"></script>
+
+        <h1>Edit code</h1>
+        <button onclick="uploadCode()">Upload code</button>
+        <textarea style="width: 100%;" rows=100 placeholder="Insert code here..."></textarea>
+        
+    </body>
+</html>

@@ -10,6 +10,7 @@ exports.run = (canvas, alert, cursor, inputs, end, debug) => {
 
         //controller to determine time since program execution, as well as delay/wait/sleep (within thread)
         class time {
+            static #time = null;
             static get time() {
                 return Date.now()-time.#time;
             }

@@ -1,5 +1,13 @@
+:root{
+    --bgColor: #ffffff;
+    --highlightColor: #800000;
+    --shadowColor: #600000;
+    --foreground: #000000;
+    --faded: #BBBBBB;
+}
+
 .topNavbar {
-    background: #800000;
+    background: var(--highlightColor);
     position: fixed;
     width: 100%;
     left: 0;
@@ -10,7 +18,7 @@
 }
 
 .navbarTitle {
-    color: white;
+    color: var(--bgColor);
     margin: 0;
     font-size: 50px;
     font-family: 'Roboto', sans-serif;
@@ -18,7 +26,7 @@
 }
 
 .navbarNavigation {
-    color: white;
+    color: var(--bgColor);
     padding: 0 10px;
     font-family: 'Roboto', sans-serif;
 }
@@ -44,7 +52,7 @@ body {
 }
 
 #reportButton {
-    color: #800000;
+    color: var(--highlightColor);
     font-size: xx-large;
 }
 
@@ -59,65 +67,47 @@ body {
 }
 
 #scoreBoardContainer {
-    grid-area: score;
+    height: 37vw;
     margin: 0 10px;
 }
 
 #scoreBoardCategoryContainer {
-    background: #800000;
-    display: grid;
-    grid-template-areas: "cat1 cat2 cat3 cat4";
-    grid-template-columns: auto auto auto auto;
+    display: inline-block;
+    overflow: auto;
 }
 
-#cat1 {
-    color: white;
-    grid-area: cat1;
-    text-align: center;
-    border-right: 2px solid black;
-    margin: 0;
-    font-size: x-large;
+#scoreBoardTitle{
+    margin-top: 0;
 }
 
-#cat2 {
-    color: white;
-    grid-area: cat2;
-    text-align: center;
-    border-right: 2px solid black;
-    margin: 0;
-    font-size: x-large;
-}
-
-#cat3 {
-    color: white;
-    grid-area: cat3;
-    text-align: center;
-    border-right: 2px solid black;
-    margin: 0;
-    font-size: x-large;
-}
-
-#cat4 {
-    color: white;
-    grid-area: cat4;
+.category{
+    background-color: var(--shadowColor);
     text-align: center;
     margin: 0;
     font-size: x-large;
+    color: var(--faded);
 }
+
+.selected{
+    background-color: var(--highlightColor);
+    color: var(--bgColor);
+}
+
 
 #scoreBoardEntryContainer {
-    background: white;
-    height: 35vw;
+    background: var(--bgColor);
+    height: 100%;
+    overflow: auto;
 }
 
 #scoreBoardBody {
     padding: 10px 5px;
-    background: gray;
+    background: var(--faded);
+    max-height: 80%;
 }
 
 #gameAndScore {
     display: grid;
-    width: 100%;
     grid-template-areas: "game score";
     grid-template-columns: auto 33%;
 }
@@ -139,10 +129,11 @@ body {
 
 button {
     font-size: 1.2em;
-    background: #800000;
-    color: white;
+    background: var(--highlightColor);
+    color: var(--bgColor);
     border-width: 0;
     padding: 3px 6px;
+    cursor: pointer;
 }
 
 #loginButtons {
@@ -150,7 +141,7 @@ button {
 }
 
 #forgetPassword {
-    color: #800000;
+    color: var(--highlightColor);
     margin-left: 10px;
     font-family: 'Roboto', sans-serif;
 }
@@ -230,7 +221,7 @@ img {
 }
 
 #myGamesButton {
-    color: #800000;
+    color: var(--highlightColor);
     font-family: 'Roboto', sans-serif;
 }
 
@@ -260,5 +251,5 @@ a {
 }
 
 .makeRed {
-    color: #800000;
+    color: var(--highlightColor);
 }
