@@ -1,4 +1,4 @@
-const socket = new WebSocket("wss://137.112.40.92:8081");
+const sock = new WebSocket("wss://137.112.40.92:8081");
 const canvas = document.getElementById("canvas").getContext("2d");
 let id = null;
 let file = new URLSearchParams(window.location.search).get('id');
@@ -7,14 +7,14 @@ let focus = false;
 let playing = false;
 let c = document.getElementById("canvas");
 const status = document.getElementById("status");
-socket.onopen = function (e) {
+sock.onopen = function (e) {
   console.log("[open] Connection established");
-  socket.isAlive = true;
+  sock.isAlive = true;
 };
 
 function sendMessage(msg) {
-  if (socket.isAlive) {
-    socket.send(id + " " + msg);
+  if (sock.isAlive) {
+    sock.send(id + " " + msg);
   } else console.log("Attempting to send message thru dead socket! Message: " + msg);
 }
 
@@ -58,7 +58,7 @@ function arrToStr(arr, start) {
 
 let debug = false;
 
-socket.onmessage = function (event) {
+sock.onmessage = function (event) {
   if (debug) console.log(d);
   //console.log(`[message] Data received from server: ${event.data}`);
   //format: [op] [messageData]
@@ -99,7 +99,7 @@ socket.onmessage = function (event) {
       canvas.clearRect(0, 0, 1920, 1080);
       loseFocus();
       playing = false;
-      socket.isAlive = false;
+      sock.isAlive = false;
       break;
     case "cursor":
       updateMouse(d[1]);
@@ -258,20 +258,20 @@ function stop() {
 //THEN in onmessage if the request is to get a sensor value like getmousepos, then the respective value will be sent to the server
 
 
-socket.onclose = function (event) {
+sock.onclose = function (event) {
   if (event.wasClean) {
     console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
     status.innerHTML = "Server closed";
-    socket.isAlive = false;
+    sock.isAlive = false;
   } else {
     // e.g. server process killed or network down
     // event.code is usually 1006 in this case
     console.log('[close] Connection died');
-    socket.isAlive = false;
+    sock.isAlive = false;
   }
 };
 
-socket.onerror = function (error) {
+sock.onerror = function (error) {
   console.log(`[error] ${error.message}`);
   status.innerHTML = "Network error";
 };

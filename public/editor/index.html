@@ -11,7 +11,10 @@
     <nav class="topNavbar" id="head">
 
     </nav>
+    <div id="mainPage">
+        <input id="gameTitle" placeholder="title here..." style="width: 50%; font-size: 2.5em;"><br>
     <div id="gameAndScore">
+        
         <div id="canvasArea" style="width: 66vw; height: 37vw; position: relative;">
             <div id="disableStatus" onclick="focus();"
                 style="padding: auto; width: 100%; height: 100%; text-align: center; background-color: rgba(0,0,0,.5); z-index: 10;">
@@ -44,20 +47,33 @@
 
     <div id="gameDescription">
         <h1>Description</h1>
-        <textarea style="width: 100%; resize:none; overflow: auto;" rows=100
-            placeholder="Insert description here...">This is a description of the game.</a>
+        <textarea style="width: 50%; resize:none; overflow: auto;" rows=10
+            placeholder="Insert description here..." id="desc"></textarea>
         </div>
-
-        <script type="text/javascript" src="../scripts/gameServe.js"></script>
 
         <h1>Edit code</h1>
         <button onclick="uploadCode()">Upload code</button>
-        <textarea style="width: 100%; resize:none; overflow: auto;" rows=1000 placeholder="Insert code here..."></textarea>
-        <script src="/__/firebase/7.18.0/firebase-app.js"></script>
-        <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
-        <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
-
-        <script src="/__/firebase/init.js"></script>
+        <textarea style="width: 90%; resize:none; overflow: auto;" rows=1000 placeholder="Insert code here..."></textarea>
+        </div>
+        <script type="text/javascript" src="../scripts/gameServe.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+        <script>
+        
+            let f = new URLSearchParams(window.location.search).get('id');
+            
+            let doc = firebase.firestore().collection("GameMetadata").doc(f);
+            if(f)
+                doc.get().then((doc)=>{
+                    if(!doc.exists) document.location.pathname="/404.shtml";
+                    document.querySelector("#gameTitle").value = doc.get("Title");
+                    document.querySelector("#desc").innerHTML = doc.get("Description");
+                    //TODO: add comments, dates, tags from doc
+                })
+        </script>
 </body>
 
 </html>
