@@ -17,10 +17,15 @@
         </div>
         <div id="gameAndScore">
             <div id="canvasArea" style="width: 66vw; height: 37vw; position: relative;">
-                <div id="disableStatus" onclick="focus();" style="padding: auto; width: 100%; height: 100%; text-align: center; background-color: rgba(0,0,0,.5); z-index: 10;">
-                    <div style="color: #ffffff; width: fit-content; height: fit-content; position: relative; top: 50%; padding: auto auto; margin: auto auto; background-color: #000000">Game unfocused. Click to <span id="word">play</span>.</div>
+                <div id="disableStatus" onclick="focus();"
+                    style="padding: auto; width: 100%; height: 100%; text-align: center; background-color: rgba(0,0,0,.5); z-index: 10;">
+                    <div
+                        style="color: #ffffff; width: fit-content; height: fit-content; position: relative; top: 50%; padding: auto auto; margin: auto auto; background-color: #000000">
+                        Game unfocused. Click to <span id="word">play</span>.</div>
                 </div>
-                <canvas style="z-index: 1; border: 3px solid; width: 66vw; height: 37vw; top: -3px; left: -3px; position: absolute; filter: blur(10px);" width="1920" height="1080" id="canvas"></canvas>
+                <canvas
+                    style="z-index: 1; border: 3px solid; width: 66vw; height: 37vw; top: -3px; left: -3px; position: absolute; filter: blur(10px);"
+                    width="1920" height="1080" id="canvas"></canvas>
             </div>
             <div id="scoreBoardContainer">
                 <h1 id="scoreBoardTitle">Scoreboard</h1>
@@ -55,9 +60,14 @@
             </div>
         </div>
 
-    </div>  
+    </div>
 
     <script type="text/javascript" src="../scripts/gameServe.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+
+    <script src="/__/firebase/init.js"></script>
 </body>
 
 </html>

@@ -1,18 +1,24 @@
 "use strict";
 const fs = require('fs');
-const serverConfig = JSON.parse(fs.readFileSync('wsConfig.json'));
 const ws = require('ws');
-const wss = new ws.Server(serverConfig);
+
 const { Worker } = require('worker_threads');
 
 let workers = new Map();
 //This is assuming all verification has been performed on the file which the user wants to run. Therefore the user will have NO access to server-side code
 
-var privateKey = fs.readFileSync('key.pem', 'utf8');
-var certificate = fs.readFileSync('cert.pem', 'utf8');
+const privateKey = fs.readFileSync('./ssl/private.pem', 'utf8');
+const certificate = fs.readFileSync('./ssl/cert.pem', 'utf8');
+const ca = fs.readFileSync('./ssl/ca_bundle.crt');
 
-var credentials = { key: privateKey, cert: certificate };
-var https = require('https');
+const credentials = { key: privateKey, ca: ca, cert: certificate };
+const https = require('https');
+
+const httpsServer = https.createServer(credentials);
+httpsServer.listen(8081);
+
+const wss = new ws.Server({server: httpsServer});
+//const wss = new ws.Server({port: 8081});
 
 function arrToStr(arr, start) {
   let r = "";

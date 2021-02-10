@@ -3,12 +3,13 @@
 
 <head>
     <link rel="stylesheet" href="../main.css">
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css">
     <script src="../scripts/headerGet.js"></script>
 </head>
 
 <body>
     <nav class="topNavbar" id="head">
-        
+
     </nav>
 
     <h1 id="loginTitle">Login</h1>
@@ -18,12 +19,23 @@
         <label></label><input id="inputPassword" type="text" placeholder="Password">
     </div>
     <br>
-    <div id="loginButtons">
+    <div id="loginButtons"><!--
         <button id="loginButton">Login</button>
         <button id="signUpButton">Sign Up</button>
         <a href="../public/reset.html" id="forgetPassword">Forget your password?</a>
+    -->
+    <div id="firebaseui-auth-container" lang="en">
+      
     </div>
+    </div>
+    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
 
+    <script src="/__/firebase/init.js"></script>
+
+    
+  <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
 </body>
 
 </html>

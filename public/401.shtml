@@ -11,7 +11,7 @@
     </nav>
     
     <div id="mainPage">
-    <h1>Temp index.html. See available pages:</h1>
+    <h1>401 unauthorized! You must be logged in to do that.</h1>
     <a href="404.html">404</a>
     <a href="./game">game</a>
     <a href="./login">login</a>
