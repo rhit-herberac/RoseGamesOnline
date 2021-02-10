@@ -8,6 +8,12 @@ const { Worker } = require('worker_threads');
 let workers = new Map();
 //This is assuming all verification has been performed on the file which the user wants to run. Therefore the user will have NO access to server-side code
 
+var privateKey = fs.readFileSync('key.pem', 'utf8');
+var certificate = fs.readFileSync('cert.pem', 'utf8');
+
+var credentials = { key: privateKey, cert: certificate };
+var https = require('https');
+
 function arrToStr(arr, start) {
   let r = "";
   let a = start;

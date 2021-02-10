@@ -9,16 +9,42 @@
         <nav class="topNavbar" id="head">
         
         </nav>
-        <canvas style="width: 1920; height: 1080;" width="1920" height="1080" id="canvas"></canvas>
+        <div id="gameAndScore">
+            <div id="canvasArea" style="width: 66vw; height: 37vw; position: relative;">
+                <div id="disableStatus" onclick="focus();" style="padding: auto; width: 100%; height: 100%; text-align: center; background-color: rgba(0,0,0,.5); z-index: 10;">
+                    <div style="color: #ffffff; width: fit-content; height: fit-content; position: relative; top: 50%; padding: auto auto; margin: auto auto; background-color: #000000">Game unfocused. Click to <span id="word">play</span>.</div>
+                </div>
+                <canvas style="z-index: 1; border: 3px solid; width: 66vw; height: 37vw; top: -3px; left: -3px; position: absolute; filter: blur(10px);" width="1920" height="1080" id="canvas"></canvas>
+            </div>
+            <div id="scoreBoardContainer">
+                <h1 id="scoreBoardTitle">Scoreboard</h1>
+                <div id="scoreBoardBody">
+                    <div id="scoreBoardCategoryContainer">
+                        <button id="cat1" class="category selected">Cat1</button>
+                        <button id="cat2" class="category">Cat2</button>
+                        <button id="cat3" class="category">Cat3</button>
+                        <button id="cat4" class="category">Cat4</button>
+                    </div>
+                    <div id="scoreBoardEntryContainer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="status">null</div>
         <button onclick="stop()">Stop</button>
         <button onclick="start()">Start</button>
+
+        <div id="gameDescription">
+            <h1>Description</h1>
+            <textarea style="width: 100%; resize:none; overflow: auto;" rows=100 placeholder="Insert description here...">This is a description of the game.</a>
+        </div>
 
         <script type="text/javascript" src="../scripts/gameServe.js"></script>
 
         <h1>Edit code</h1>
         <button onclick="uploadCode()">Upload code</button>
-        <textarea style="width: 100%;" rows=100 placeholder="Insert code here..."></textarea>
+        <textarea style="width: 100%; resize:none; overflow: auto;" rows=1000 placeholder="Insert code here..."></textarea>
         
     </body>
 </html>
