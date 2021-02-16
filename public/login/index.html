@@ -12,8 +12,8 @@
 
     </nav>
 
-    <h1 id="loginTitle">Login</h1>
-    <div id="loginTextBoxes">
+    <h1 id="loginTitle">Login/Sign Up</h1>
+    <!--div id="loginTextBoxes">
         <label></label><input id="inputUsername" type="text" placeholder="Username">
         <br>
         <label></label><input id="inputPassword" type="text" placeholder="Password">
@@ -24,18 +24,16 @@
         <button id="signUpButton">Sign Up</button>
         <a href="../public/reset.html" id="forgetPassword">Forget your password?</a>
     -->
-    <div id="firebaseui-auth-container" lang="en">
-      
-    </div>
-    </div>
+    <div id="loginTextBoxes"><div id="firebaseui-auth-container" lang="en"></div>
+    <button type="button" class="btn btn-primary" onclick="signInRose()" id="signinRose">Sign in with RoseFire</button></div>
     <script src="/__/firebase/7.18.0/firebase-app.js"></script>
     <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
     <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
-
+    <script src="rosefire.min.js"></script>
     <script src="/__/firebase/init.js"></script>
-
-    
-  <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <script src="fbAuth.js"></script>
 </body>
 
 </html>

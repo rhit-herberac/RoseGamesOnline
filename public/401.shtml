@@ -11,19 +11,23 @@
     </nav>
     
     <div id="mainPage">
-    <h1>401 unauthorized! You must be logged in to do that.</h1>
+    <h1>401 unauthorized! <span id="reason">You must be logged in to do that.</span></h1>
     <a href="404.html">404</a>
     <a href="./game">game</a>
     <a href="./login">login</a>
     <a href="./editor">codeEditor</a>
     <a href="./browse">browse</a>
 </div>
-<script type="text/javascript" src="../scripts/gameServe.js"></script>
-    <script src="/__/firebase/7.18.0/firebase-app.js"></script>
-    <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
-    <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
-    <script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
-    <script src="/__/firebase/init.js"></script>
+<script src="/__/firebase/7.18.0/firebase-app.js"></script>
+<script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
+<script src="/__/firebase/7.18.0/firebase-firestore.js"></script>
+<script src="/__/firebase/7.18.0/firebase-auth.js"></script>
+<script src="/__/firebase/init.js"></script>
+<script>
+    let r = new URLSearchParams(window.location.search).get('reason');
+    if(r)
+        document.getElementById("reason").innerHTML = r;
+</script>
 </body>
 
 </html>

@@ -253,3 +253,7 @@ a {
 .makeRed {
     color: var(--highlightColor);
 }
+
+#editorMenu{
+    display: inline;
+}

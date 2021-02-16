@@ -1,58 +1,92 @@
 "use strict";
-const http = require('http');
+const https = require('https');
 const fs = require('fs');
+const exp = require('express');
+const cors = require('cors');
+
+const app = exp();
+
+const admin = require("firebase-admin");
+
+const serviceAccount = require("./ssl/rosegamesonline-f6e17ffb137a.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const firestore = admin.firestore();
+
+const whitelist = ['https://137.112.40.92', 'http://137.112.40.92', 'https://rosegamesonline.web.app', 'http://rosegamesonline.web.app', 'https://rosegamesonline.web.app', 'http://rosegamesonline.web.app', 'https://rosegamesonline.firebaseapp.com', 'http://rosegamesonline.firebaseapp.com']
+app.use(cors({ origin: whitelist, }))
 //const canvas = require('canvas'); //This will be used to ensure anything sent via canvas() is valid, to prevent injection attacks
 
+const privateKey = fs.readFileSync('./ssl/private.pem', 'utf8');
+const certificate = fs.readFileSync('./ssl/cert.pem', 'utf8');
+const ca = fs.readFileSync('./ssl/ca_bundle.crt');
+
+const credentials = { key: privateKey, ca: ca, cert: certificate };
+
+
 function throwError(err) {
-    console.log("This is a temporary error check. Error: " + err);
+    return "Error: " + err;
 }
 
-class Node{
+class Node {
     parent = null
     children = []
     val = null
-    constructor(v = null, p = null){
+    isEnd = false
+    constructor(v = null, p = null) {
         this.val = v;
         this.parent = p;
     }
 }
 
-class abcTree{
+class abcTree {
     root = new Node();
-    
-    constructor(v){
-        let j = v;
+
+    constructor(v) {
+        let j = JSON.parse(v);
         //console.log(j);
         let c = this.root;
-        for(let b = 0; b < j.length; b++){
+        for (let b = 0; b < j.length; b++) {
             let w = j[b];
-            for(let k of w){
+            //console.log("Adding " + w);
+            for (let k of w) {
                 let l = k.toLowerCase();
                 let i = l.charCodeAt(0)
-                if(c.children[i] == null){
+                if (c.children[i] == null) {
+                    //console.log("Adding " + l + " after " + c.val);
                     c.children[i] = new Node(l, c);
+                    //console.log(c.children[i]);
                 }
                 c = c.children[i];
             }
+            c.isEnd = true;
             c = this.root;
         }
     }
 
-    searchFor(str){
-        let a = root;
-        for(let c of str){
+    searchFor(str) {
+        //console.log("Searching for " + str);
+        let a = this.root;
+        for (let c of str) {
             let l = c.toLowerCase();
             let i = l.charCodeAt(0)
-            if(a[i] != null){
-                a = a[i];
+            if (a.children[i] != null) {
+                a = a.children[i];
             }
-            else return false;
+            else{
+                //console.log("Dead end at " + c);
+                return false;
+            }
         }
-        return true;
+        
+        return a.isEnd;
     }
 }
 
-const bannedKeywords =  new abcTree(fs.readFileSync("bannedKeywordsAndAPIs.json", 'utf-8'))//all banned keywords in NodeJS and web JS
+const bannedKeywords = new abcTree(fs.readFileSync("bannedKeywordsAndAPIs.json", 'utf-8'))//all banned keywords in NodeJS and web JS
 const allowedKeywords = new abcTree(fs.readFileSync("allowedKeywords.json", 'utf-8'))
 
 class codeScope {
@@ -62,31 +96,37 @@ class codeScope {
     parent = null;
     currentLine = "";
     scopeInClass = false;
+    isCanvas = false;
     constructor(parent) {
         this.parent = parent;
     }
     getLast() {
+        if(!this.stack[this.stack.length - 1] instanceof codeScope){
+            console.log("BAD getLast");
+            return null;
+        } 
         return this.stack[this.stack.length - 1];
     }
 
     push(val) {
-        if(this.checkString()){
+        //let r = this.checkString()
+        //if (!r) {
             this.stack.push(this.currentLine);
             this.currentLine = "";
             this.lineNums.push(val);
-        }
+        //}
+        //return r;
     }
 
     pushStack(val) {
-        if(this.checkString()){
-            this.stack.push(new codeScope(this));
-            this.lineNums.push(val);
-        }
+        //let r = this.checkString()
+        this.stack.push(new codeScope(this));
+        this.lineNums.push(val);
     }
 
     toString(space = null) {
         let s = "";
-        if(space != null) s = space;
+        if (space != null) s = space;
         let r = "";
         for (let l of this.stack) {
             if (l instanceof codeScope) {
@@ -98,16 +138,46 @@ class codeScope {
     }
 
     //returns true if currentLine has all valid names/types/etc
-    checkString(){
-        let stuff = this.currentLine.split(/(\s|=|,|}|;|\+|-|\(|\)|{|!|\&|\*|%|\\|\/|:|\[|\]|<|>|\?|"|'|`|\t|\n|\r|)+/g); //this matches every token in Javascript
+    //for time's sake this will only check if there are no banned words. In the future, this would keep record of all user-made variables and mark any undeclared variables as well.
+    checkString(i = null) {
+        if (i == null) {
+            for (let c = 0; c < this.stack.length; c++) {
+                let r = this.checkString(c)
+                if (r != null) return r;
+            }
+            return null;
+        }
+        else {
+            let stuff = this.stack[i];
+            if (stuff instanceof codeScope) {
+                let r = stuff.checkString();
+                if (r != null) return r;
+                return null;
+            }
+            else {
+                let s = stuff.replace(/(\s|\=|\,|\}|\;|\+|\-|\(|\)|\{|\!|\&|\*|\%|\^|\\|\/|\:|\[|\]|\<|\>|\?|\!|\"|\'|\`|\t|\n|\r||\||\.|\@|\~)+/g, "?"); //this matches every token in Javascript
+                //console.log(s);
+                s = s.replace(/\?\?/g, "!").replace(/\?/g, "");
+                //console.log(s);
+                s = s.split("!");
+                //console.log(s);
+                for (let w of s) {
+                    //console.log("Checking for " + w)
+                    if (bannedKeywords.searchFor(w)) {
+                        return "Illegal word: '" + w + "' line " + this.lineNums[i];
+                    }
+                }
+                return null;
+            }
+        }
     }
 }
 
 function checkCode(code) {
-    console.log("Checking code");
+    //console.log("Checking code");
     //let c = code.replace(/[\r\n]+\n/g, ";").trim();
 
-    
+
     //first step is to reconstruct code into codeStack
     let prevChar = null;
     let inString = [];
@@ -118,7 +188,9 @@ function checkCode(code) {
     let currentStack = new codeScope(null);
     let codeStack = currentStack; //represents all user code, wrapped in functions and ifs if necessary
     let escapeChar = false;
-    for (let c of code.trim().replace(/[\s+^\n+\r]/g, " ").replace(/(^\s+)|(\s+$)/gm, "")) { //2nd regex doesn't work...?
+    
+    for (let c of code.replace(/[ \t]+/g, " ").replace(/(^[ \t]+)|([ \t]+$)/gm, '')) { //2nd regex doesn't work...?
+        //console.log(c);
         //console.log(currentStack);
         if (c == "\n" || c == "\r") lineNum++;
 
@@ -126,26 +198,35 @@ function checkCode(code) {
 
         if (inComment == null) {
             if (inString.length == 0 && prevChar == "/" && (c == "/" || c == "*")) { //comment start
-                console.log("Comment  begin");
+                
                 inComment = c;
-                currentStack.currentLine = currentStack.currentLine.substr(0, currentStack.currentLine.length-1);
+                currentStack.currentLine = currentStack.currentLine.substr(0, currentStack.currentLine.length - 1);
+                //console.log("Comment  begin. c = " + c);
             }
             else if (inString.length == 0 || strParse) {
-                if (c == '"' || c == '`' || c == '\'') {//string start
+                if ((c == '"' || c == '`' || c == '\'') && !currentStack.parent.isCanvas) {//string start. Ignore canvas, which must be checked
 
                     inString.push(c);
                     strParse = false;
                 }
+
                 else if (currentStack.currentLine.length > 0 && (c == ";" || c == "\n" || c == "\r")) { //new line/code
                     currentStack.push(lineNum);
+                    if (currentStack.isCanvas)
+                        currentStack.isCanvas = false;
                 }
-                else if(c == '}'){ //close stack/inline string end
+                else if (c == '}' || c == ')') { //close stack/inline string end
+                    
                     currentStack.push(lineNum);
                     currentStack = currentStack.parent;
-                    if(strParse) strParse = false;
+                    if (currentStack.isCanvas)
+                        currentStack.isCanvas = false;
+                    if (strParse) strParse = false;
                 }
-                else if(c == '{'){ //new stack start
-                    currentStack.push(lineNum);
+                else if (c == '{' || c == '(') { //new stack start
+                    if (currentStack.currentLine.indexOf("canvas") == 0)
+                        currentStack.isCanvas = true;
+                    currentStack.push(lineNum)
                     currentStack.pushStack(lineNum);
                     currentStack = currentStack.getLast();
                 }
@@ -156,64 +237,134 @@ function checkCode(code) {
                 inString.pop();
                 if (inString.length > 0) strParse = true;
             }
-            else if (prevChar == "$" && c == "{" && inString == '`') { //special format string
+            else if (prevChar == "$" && c == "{" && inString == '`' && !currentStack.parent.isCanvas) { //special format string
                 strParse = true;
                 currentStack.pushStack(lineNum);
                 currentStack = currentStack.getLast();
             }
             else if (inString != '`' && inString != null && (c == "\n" || c == "\r")) //newline in the middle of a string
-                throwError("bad string");
+                return throwError("Bad string: line " + lineNum);
         }
-        else if ((prevChar == "*" && c == "/" && inComment == "*") || (inComment == "/" && (c == "\n" || c == "\r"))){ //end comment
-            if(inComment == "/") currentStack.push(lineNum);
+        else if ((prevChar == "*" && c == "/" && inComment == "*") || (inComment == "/" && (c == "\n" || c == "\r"))) { //end comment
+            //console.log("comment end");
+            if (inComment == "/"){
+                currentStack.push(lineNum);
+                
+            }
             inComment = null;
-            console.log("Ending comment");
         }
-        else if(c == "\n" || c == "\r") console.log("newline");
+        else if(c == "\n" || c == "\r") console.log("newline in comment. inComment = " + inComment);
+        //else console.log(c);
 
         prevChar = c;
     }
-    return codeStack;
+    return codeStack.checkString();
 }
 
-const server = http.createServer(function (request, response) {
-    console.dir(request.param)
+const server = https.createServer(credentials, app);
+app.post('/verify-only', (request, response) => {
+    //console.log('POST')
+    var body = ''
+    request.on('data', function (data) {
+        body += data
+        //console.log('Partial body: ' + body)
+    })
+    request.on('end', function () {
+        if(!body){
+            response.status(400).send();
+            response.end();
+        }
+        else{
+            //let r = decodeURIComponent(body.replace("code=", ""))
+            let r = body;
+            //console.log('Body: ' + r);
+            //response.writeHead(200, { 'Content-Type': 'text/html' , 'X-Powered-By': 'None of your business', 'Response': '200'});
+            let result = checkCode(r)
+            response.status(200).send({ 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', body: 'Result: ' + (result ? result.toString() : "SUCCESS")});
+            response.end();
+        }
+    })
+})
 
-    if (request.method == 'POST') {
-        console.log('POST')
-        var body = ''
-        request.on('data', function (data) {
-            body += data
-            console.log('Partial body: ' + body)
+//TODO: saving
+app.post('/save/:file', (request, response) => {
+    //console.log('POST')
+    var body = ''
+    request.on('data', function (data) {
+        body += data
+        //console.log('Partial body: ' + body)
+    })
+    request.on('end', function () {
+        if(!body){
+            response.status(400).send();
+            response.end();
+        }
+        else{
+            //let r = decodeURIComponent(body.replace("code=", ""))
+            let r = body;
+            //console.log('Body: ' + r);
+            //response.writeHead(200, { 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', 'Response': '200'});
+            let result = checkCode(r);
+            if (!result) {
+                fs.writeFileSync('./jsSourceFiles/' + request.params.file + ".js", r, { encoding: 'utf8', flag: 'w' })
+            }
+            response.status(200).send({ 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', 'Response': '200', body: 'Result: ' + (result ? result : "SUCCESS")});
+            response.end();
+        }
+    })
+})
+
+app.get('/code/:file', (request, response) => {
+    //console.dir(request.param)
+
+    //set header for POST and GET so there's no issues communicating with Firebase
+    //response.setHeader('Access-Control-Allow-Origin', );
+    //console.log('GET')
+    if (request.params.file == null) {
+        response.writeHead(400, {'X-Powered-By': 'None of your business', 'Response': '400' });
+        response.end();
+    }
+    else if (request.headers['x-auth'] != null){
+        let idToken = request.headers['x-auth'];
+        admin.auth()
+        .verifyIdToken(idToken)
+        .then((decodedToken) => {
+            
+            const uid = decodedToken.uid;
+            let doc = firestore.collection("GameMetadata").doc(request.params.file);
+            let usr = firestore.collection("Users").doc(uid);
+            doc.get().then(snap => {
+                if(snap.exists){
+                    if (!fs.existsSync('./jsSourceFiles/' + request.params.file + ".js")) {
+                        response.writeHead(404, {'X-Powered-By': 'None of your business', 'Response': '404' });
+                        response.end();
+                    }
+                    else if(snap.get("Author").path != usr.path){
+                        response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+                        response.end();
+                    }
+                    else{
+                    //response.writeHead(200, )
+                    //console.log("Sending code");
+                    let r = String(fs.readFileSync('./jsSourceFiles/' + request.params.file + ".js"));
+                    //console.log(r)
+                    //response.status(200).send({ 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', 'Response': '200', 'body': r});
+                    //response.setHeader("Content-Type", "text/plain");
+                    response.write(r, () => response.end());
+                    }
+                }
+            });
+            
+            
         })
-        request.on('end', function () {
-            let r = decodeURIComponent(body.replace(/\+/g, ' ').replace("code=", ""))
-            console.log('Body: ' + r);
-            response.writeHead(200, { 'Content-Type': 'text/html' });
-            response.end('Result: \n' + checkCode(r).toString());
-        })
-    } else {
-        console.log('GET')
-        var html = `
-              <html>
-              <head>
-              </head>
-                  <body>
-                  <script> function textTrim(){
-                  let o = document.getElementById('c').value;
-                  console.log(o);
-                  o = encodeURI(o);
-                  console.log(o);
-              }</script>
-                        <textarea id="c" type="text" name="code" form="f"></textarea>
-                      <form id="f" method="post" onsubmit="textTrim()" action="http://${host}:${port}" > 
-                          
-                          <input type="submit" value="Submit" />
-                      </form>
-                  </body>
-              </html>`
-        response.writeHead(200, { 'Content-Type': 'text/html' })
-        response.end(html)
+        .catch((error) => {
+            console.log(error);
+            response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+            response.end();
+        });
+    } else{
+        response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+        response.end();
     }
 })
 
@@ -240,6 +391,6 @@ process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
 
 const port = 3000;
-const host = 'rosegamesonline.csse.rose-hulman.edu';
+const host = '137.112.40.92';
 server.listen(port, host);
 console.log(`Listening at http://${host}:${port}`);
