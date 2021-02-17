@@ -11,7 +11,7 @@
 
     </nav>
     <div id="mainPage">
-        <input id="gameTitle" placeholder="title here..." style="width: 50%; font-size: 2.5em;"><br><br>
+        <input id="gameTitle" placeholder="title here..." style="width: 50%; font-size: 2.5em;" onchange="updateMetadata()"><br><br>
     <div id="gameAndScore">
         
         <div id="canvasArea" style="width: 66vw; height: 37vw; position: relative;">
@@ -41,18 +41,18 @@
         </div>
     </div>
     <div id="status">null</div>
-    <button onclick="stop()">Stop</button>
-    <button onclick="start()">Start</button>
+    <button onclick="stop()" id="stop">Stop</button>
+    <button onclick="start()" id="start">Start</button>
 
     <div id="gameDescription">
         <h1>Description</h1>
         <textarea style="width: 50%; resize:none; overflow: auto;" rows=10
-            placeholder="Insert description here..." id="desc"></textarea>
+            placeholder="Insert description here..." id="desc" onchange="updateMetadata()"></textarea>
         </div>
 
         <h1>Edit code</h1>
-        <div id="editorMenu"><button onclick="verifyCode()">Verify only</button><button onclick="saveCode()">Save</button><button onclick="runCode()">Save And Run</button></div><br>
-        <textarea style="width: 90%; height: 75vh; resize:none; overflow: auto;" placeholder="Insert code here..." name="editor" id="editor"></textarea>
+        <div id="editorMenu"><button onclick="verifyCode()">Verify only</button><button onclick="saveCode()">Save</button><button onclick="runCode()">Save And Run</button><button onclick="reloadCode()">Reload game</button></div><br>
+        <textarea style="width: 90%; height: 75vh; resize:none; overflow: auto;" placeholder="Insert code here..." name="editor" id="editor" onchange="localBackup()"></textarea>
         </div>
         <script type="text/javascript" src="../scripts/gameServe.js"></script>
         <script src="/__/firebase/7.18.0/firebase-app.js"></script>

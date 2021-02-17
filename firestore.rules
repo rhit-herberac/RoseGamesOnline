@@ -4,7 +4,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /GameMetadata/{GameID} {
       allow read: if true;
-      allow write, delete, create: if request.auth != null && request.auth.uid == " 102752109924677504905"; //service account?
+      allow write, delete, create: if request.auth != null; //service account?
       
     }
     match /Users/{userID} {

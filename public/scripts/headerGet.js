@@ -100,6 +100,15 @@ function updateHeader(){
     }
 }
 
+function clearBackup(){
+    window.localStorage.removeItem("id");
+    window.localStorage.removeItem("title");
+    window.localStorage.removeItem("desc");
+    window.localStorage.removeItem("category");
+    window.localStorage.removeItem("tags");
+    window.localStorage.removeItem("code");
+}
+
 function logInOut(){
     if(signInController.isSignedIn())
         signOut();
@@ -107,6 +116,13 @@ function logInOut(){
 }
 
 function signOut() {
-    firebase.auth().signOut();
-    window.location.pathname="/";
+    let p = true;
+    if(window.localStorage.getItem('id') != null)
+        p = confirm("Unsaved work for a game has been found. Logging out will clear the unsaved work. Continue?");
+    if(p){
+        clearBackup();
+        firebase.auth().signOut();
+        window.location.pathname="/";
+    }
+    
 }
