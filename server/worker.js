@@ -167,7 +167,7 @@ else {
         }
 
         function debug(val){
-            _srvMsg("debug", val);
+            _srvMsg("debug", sanitize(val));
         }
 
         //creates temporary js file to enable client to play game

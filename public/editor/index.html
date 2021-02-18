@@ -51,7 +51,7 @@
         </div>
 
         <h1>Edit code</h1>
-        <div id="editorMenu"><button onclick="verifyCode()">Verify only</button><button onclick="saveCode()">Save</button><button onclick="runCode()">Save And Run</button><button onclick="reloadCode()">Reload game</button></div><br>
+        <div id="editorMenu"><button onclick="window.open(document.location.origin+'/editor/documentation.html', {height: 500, left: 10, menubar: 0, resizable: 1, status: 1, titlebar: 1, top: 10, width: 100}, false);">View Help</button><button onclick="verifyCode()">Verify only</button><button onclick="saveCode()">Save</button><button onclick="runCode()">Save And Run</button><button onclick="reloadCode()">Reload game</button></div><br>
         <textarea style="width: 90%; height: 75vh; resize:none; overflow: auto;" placeholder="Insert code here..." name="editor" id="editor" onchange="localBackup()"></textarea>
         </div>
         <script type="text/javascript" src="../scripts/gameServe.js"></script>
