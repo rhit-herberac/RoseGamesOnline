@@ -7,6 +7,9 @@
     </div>
 </div>
 <div id="navbarRight">
-    <button class="navbarNavigation" id="profile"  onclick="window.location.href='\/\/' + window.location.host + '/login/'">Log In</button>
-    <button onclick="window.location.href='\/\/' + window.location.host + '/login/signup.html'" class="navbarNavigation" id="logInOut">Sign Up</button>
+    
+    
+    <button class="navbarNavigation" id="profile" style="visibility: hidden;" onclick="window.location.pathname='/profile/?uid=' + signInController.getUID();">Profile</button>
+    <button class="navbarNavigation" id="myGames" style="visibility: hidden;"  onclick="window.location.pathname='/browse/?uid=' + signInController.getUID();">View My Games</button>
+    <button onclick="logInOut()" class="navbarNavigation" id="logInOut">Sign Up/Log In</button>
 </div>

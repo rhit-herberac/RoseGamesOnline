@@ -126,10 +126,10 @@ else {
 
     //sanatizes strings to prevent SQL injection attacks. Only works for alert() because canvas() isn't handled as a string, but rather a canvas command.
     //Note: inline code like ${this} is checked in the verification process, like most of the rest of the code.
-    function santitze(cmd){
+    function sanitize(cmd){
         let r = "";
         let prev = null;
-        for (c of cmd){
+        for (let c of String(cmd)){
             if(prev != "\\")
                 if(c == "'" || c == "\"" || c == "`")
                     r = r + "\\";
@@ -167,7 +167,7 @@ else {
         }
 
         function debug(val){
-            _srvMsg("debug", val);
+            _srvMsg("debug", sanitize(val));
         }
 
         //creates temporary js file to enable client to play game

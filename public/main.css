@@ -69,6 +69,7 @@ body {
 #scoreBoardContainer {
     height: 37vw;
     margin: 0 10px;
+    display: none; /*removed because of timing to complete project*/
 }
 
 #scoreBoardCategoryContainer {
@@ -272,4 +273,13 @@ a {
 
 .makeRed {
     color: var(--highlightColor);
+}
+
+#editorMenu{
+    display: inline;
+}
+
+#editorMenu button{
+    padding-left: 5%;
+    padding-right: 5%;
 }

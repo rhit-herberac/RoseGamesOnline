@@ -12,6 +12,10 @@ sock.onopen = function (e) {
   sock.isAlive = true;
 };
 
+function updateFile(f){
+  file = f;
+}
+
 function sendMessage(msg) {
   if (sock.isAlive) {
     sock.send(id + " " + msg);
@@ -245,8 +249,11 @@ document.onkeyup = function (event) {
 function start() {
   if (file)
     sendMessage("start " + file);
-  else status.innerHTML = "bad URL";
-  document.location.pathname="/404.shtml";
+  else{
+    status.innerHTML = "bad URL";
+    alert("No code present.");
+    //document.location.pathname="/404.shtml";
+  }
 }
 
 function stop() {

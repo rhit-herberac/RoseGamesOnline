@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="../main.css">
+</head>
+
+<body>
+    <h1>Rose Games Online Documentation</h1>
+    <hr>
+    <p>Rose Games Online is a website which lets users create and share games made in a limited form of Javascript. The
+        website utilizes server-side code, Canvas, and WebSocket connections to achieve this.<br>
+        This document will go over the capabilites and limits of Rose Games Online.</p><br>
+    <section>
+        <h2>Capabilities and Limits</h2>
+        <ul>
+            <li>The games on this website supports the latest NodeJS-based ES6 Javascript functionality to the fullest,
+                except as listed below.
+            <li>The programmer is responsible for error/syntax checking and correction</li>
+            </li>
+            <li>The game is played on a canvas with a viewable space with coordinates (X,Y)=(0,0) at the top left edge,
+                to (X,Y)=(1920, 1080) at the bottom right edge (positive X left to right, positive Y top to bottom). The
+                canvas is set to a white background at the start of every game.</li>
+            <li>The games have access to functions and classes, described in detail in "reference".</li>
+            <li>The following keywords, methods, functions, and classes ARE supported: <a
+                    href="allowedKeywords.json">allowedKeywords.json</a></li>
+            <li>If a banned keyword has been found in the code, code saving will stop and an error message will show.
+            </li>
+            <li>Most NodeJS and DOM Javascript, as well as web APIs which may or may not be supported on web browsers,
+                and some advanced functionality such as multithreading, has been banned from any game.</li>
+            <li>The modification or redefinition of any provided class or function is not allowed (note: as of now the
+                website does not check for this, although it should, so just don't do it pls)</li>
+            <li>The following keywords, methods, functions, and classes ARE NOT supported: <a
+                    href="bannedKeywordsAndAPIs.json">bannedKeywordsAndAPIs.json</a></li>
+            <li><b>In order to ensure games run smoothly on the server, any infinite/long term loop (including waiting
+                    for inputs) MUST include a delay. Not doing so will result in the game freezing when running!</b>
+            </li>
+            <li>There is a set limit to the amount of memory and the size of the stack for your game. For most working
+                games, they should be well within the limit.</li>
+        </ul>
+        <hr>
+        <h2>Reference</h2>
+        <ul>
+            <li>
+                <h3>time</h3>
+                <p>time is a static class which gives functionality for delays, and keeping track of milliseconds since
+                    game start.</p>
+                <ul>
+                    <li><b>time.start</b>: returns Date object set to when the game started running (Date.now())</li>
+                    <li><b>time.time</b>: returns Date.now()-time.start, the elapsed time since the game started</li>
+                    <li><b>time.wait(ms)</b>: Causes the game to wait ms milliseconds before running the next line.
+                    <li>Note: time.wait(ms) is thread-locking. Rose Games Online allows other time-based Javascript
+                        functionality such as setInterval.</li>
+            </li>
+        </ul>
+        </li>
+        <li>
+            <h3>canvas</h3>
+            <p>canvas is a function which allows the game to draw on the user's window, a Canvas. For more reference,
+                visit <a href="https://www.w3schools.com/graphics/canvas_reference.asp">W3 Schools Canvas reference.</a>
+            </p>
+            <ul>
+                <li><b>canvas(func)</b>: Run a canvas function. func is of type string, containing a canvas method or
+                    field (ran
+                    as "canvas.func;")</li>
+            </ul>
+        </li>
+        <li>
+            <h3>alert</h3>
+            <p>alert is a function which sends an alert message to the user, similar to Javascript's alert(str)
+                function.</p>
+            <ul>
+                <li><b>alert(str)</b>: Alerts the user with a message similar to the web browser's alert(str) function.
+                    str is a
+                    string containing the message to display, and is automatically santitized.</li>
+            </ul>
+        </li>
+        <li>
+            <h3>debug</h3>
+            <p>debug is a function which sends an debug message to the user, similar to Javascript's console.log(str)
+                function.</p>
+            <ul>
+                <li><b>debug(str)</b>: Shows a debug message in the user's console with a message similar to the web
+                    browser's
+                    console.log(str) function. str is a string containing the message to display, and is automatically
+                    santitized.</li>
+            </ul>
+        </li>
+        <li>
+            <h3>cursor</h3>
+            <p>cursor is a function which allows the game to change the user's cursor look while it's on the game
+                window. This is similar to CSS's style.cursor.</p>
+            <ul>
+                <li><b>cursor(val)</b>: Changes the user's cursor look while it is on the display, to val, where val is
+                    a string
+                    containing a <a href="https://www.w3schools.com/jsref/prop_style_cursor.asp">CSS cursor style.</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <h3>end</h3>
+            <p>end immediately stops the game from running.</p>
+            <ul>
+                <li><b>end()</b>: Immediately stop the game running.</li>
+            </ul>
+        </li>
+        <li>
+            <h3>inputs</h3>
+            <p>inputs is a static class containing all the information about the current status of inputs by the user.
+                These inputs include the keyboard, mouse position, mouse buttons, and scrollwheel (no touch input).</p>
+            <ul>
+                <li><b>inputs().resetInputs()</b>: Sets all inputs back to values of 0</li>
+                <li><b>inputs().hasFocus</b>: Returns true if the user has the game window focused (i.e. hasn't clicked out).
+                    False
+                    otherwise.</li>
+                <li><b>inputs().mousePresses</b>: Returns an array containing the mouseevent equivelant value of every mouse
+                    button currently PRESSED. See <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button">here</a> for value
+                    representations.</li>
+                <li><b>inputs().keyPresses</b>: Returns an array containing the keyevent equivelant value of every key
+                    currently PRESSED (except escape, which will exit out of the game). See <a
+                        href="https://keycode.info">here</a> for value representations.</li>
+                <li><b>inputs().scrollMode</b>: Returns an int value representing the scroll whell mode. See <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent/deltaMode">here</a> for more
+                    info.</li>
+                <li><b>inputs().scrollX</b>: Returns a value representing the current amount which the scroll wheel is moving
+                    by, in the X direction (left/right scrolling, less common).</li>
+                <li><b>inputs().scrollY</b>: Returns a value representing the current amount which the scroll wheel is moving
+                    by, in the Y direction (up/down scrolling, most common).</li>
+                <li><b>inputs().scrollZ</b>: Returns a value representing the current amount which the scroll wheel is moving
+                    by, in the Z direction (3D scrolling, usually rare).</li>
+                <li><b>inputs().mouseX</b>: Returns a value representing the current X position of the mouse on the canvas
+                    screen, with X=0 being the left edge and X=1920 being the right edge.</li>
+                <li><b>inputs().mouseY</b>: Returns a value representing the current Y position of the mouse on the canvas
+                    screen, with Y=0 being the top edge and Y=1080 being the bottom edge.</li>
+
+            </ul>
+        </li>
+        </ul>
+    </section>
+</body>
+
+</html>
