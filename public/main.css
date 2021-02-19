@@ -177,6 +177,11 @@ img {
     text-align: center;
 }
 
+#signUpContainer {
+    margin-top: 15vh;
+    text-align: center;
+}
+
 #usernameDisplay {
     font-family: 'Roboto', sans-serif;
     font-size: larger;
@@ -196,17 +201,27 @@ img {
     font-family: 'Roboto', sans-serif;
 }
 
+#signUpTextArea {
+    margin: 25px 0;
+    display: grid;
+    grid-template-areas: "labels update"
+                         "labels update"
+                         "labels update";
+    grid-template-columns: 50% 50%;
+    font-family: 'Roboto', sans-serif;
+}
+
 #infoLinks {
     grid-area: info;
 }
 
-#updateInfo {
+#updateInfo, #signUpInfo {
     grid-area: update;
     padding-top: 5px;
     text-align: left;
 }
 
-#updateInfo > input {
+#updateInfo > input, #signUpInfo > input {
     margin-bottom: 10px;
     font-size: 1.6em;
 }
@@ -215,7 +230,12 @@ img {
     grid-area: labels;
 }
 
-#updateLabels > p {
+#signUpLabels {
+    grid-area: labels;
+    text-align: center;
+}
+
+#updateLabels > p, #signUpLabels > p {
     line-height: 290%;
     margin: 0;
 }

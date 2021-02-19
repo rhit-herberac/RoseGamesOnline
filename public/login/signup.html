@@ -8,8 +8,40 @@
 
 <body>
     <nav class="topNavbar" id="head">
-        
+        <div id="navbarLeft">
+            <h1 class="navbarTitle">Rose Games Online</h1>
+            <div id="navButtons">
+                <a href="../index.html" class="navbarNavigation">Main</a>
+                <a href="../browse/index.html" class="navbarNavigation">Browse</a>
+                <a href="../editor/index.html" class="navbarNavigation">Create</a>
+            </div>
+        </div>
+        <div id="navbarRight">
+            <a href="../profile/index.html" class="navbarNavigation">Profile</a>
+            <a href="../login/signup.html" class="navbarNavigation">Sign Up</a>
+        </div>
     </nav>
+
+    <div id="signUpContainer">
+        <h1>Sign Up</h1>
+        <div id="signUpTextArea">
+            <div id="signUpLabels">
+                <p>
+                    Username<br>
+                    Password<br>
+                    Email
+                </p>
+            </div>
+            <div id="signUpInfo">
+                <input id="usernameSignUp" type="text" placeholder="Username">
+                <br>
+                <input id="passwordSignUp" type="password" placeholder="">
+                <br>
+                <input id="emailSignUp" type="text" placeholder="Example123@mail.com">
+            </div>
+        </div>
+    </div>
+
     <script src="/__/firebase/7.18.0/firebase-app.js"></script>
     <script src="/__/firebase/7.18.0/firebase-analytics.js"></script>
     <script src="/__/firebase/7.18.0/firebase-auth.js"></script>
