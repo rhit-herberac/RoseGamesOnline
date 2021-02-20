@@ -2,7 +2,7 @@ let f = new URLSearchParams(window.location.search).get('id');
 
 
 signInController.setOnSignIn(function () {
-    if(!signInController.isSignedIn()){
+    if (!signInController.isSignedIn()) {
         console.log("Not signed in");
         redirect("/401.shtml", "reason=notSignedIn");
     }
@@ -75,13 +75,19 @@ function localBackup() {
 
 function updateMetadata() {
     if (f) {
-        firebase.firestore().collection("GameMetadata").doc(f).set({
-            "Category": "Default", //temp
-            "Description": document.getElementById("desc").value,
-            "Tags": [], //temp
-            "Title": document.getElementById("gameTitle").value,
-            "dateEdited": firebase.firestore.FieldValue.serverTimestamp()
+        firebase.firestore().collection("GameMetadata").doc(f).get().then(doc => {
+            let usr = firebase.firestore().collection("Users").doc(signInController.getUID());
+            firebase.firestore().collection("GameMetadata").doc(f).set({
+                "Category": "Default", //temp
+                "Description": document.getElementById("desc").value,
+                "Tags": [], //temp
+                "Title": document.getElementById("gameTitle").value,
+                "dateEdited": firebase.firestore.FieldValue.serverTimestamp(),
+                "Author": usr,
+                "dateCreated": doc.get("dateCreated")
+            })
         })
+
     } else localBackup();
 }
 
