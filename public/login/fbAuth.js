@@ -1,5 +1,5 @@
 signInController.setOnSignIn(function(){
-    redirect("/profile/", "uid=" + signInController.getUID());
+    redirect("/profile/", "id=" + signInController.getUID());
 });
 signInController.setOnNoSignIn(function(){
     let ui = new firebaseui.auth.AuthUI(firebase.auth());
