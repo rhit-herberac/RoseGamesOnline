@@ -1,5 +1,5 @@
 let f = new URLSearchParams(window.location.search).get('id');
-
+let url = "https://137.112.40.92:3000/";
 
 signInController.setOnSignIn(function () {
     if (!signInController.isSignedIn()) {
@@ -111,7 +111,7 @@ function textTrim() {
 
 function verifyCode() {
     if (document.getElementById("editor").value.length > 0)
-        fetch('https://137.112.40.92:3000/verify-only', { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain' }, body: textTrim() })
+        fetch(url + 'verify-only', { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain' }, body: textTrim() })
             .then(res => res.json()).then((res) => {
                 if (res.body != "Result: SUCCESS") alert(res.body);
                 else alert("Code passed.");
@@ -124,7 +124,7 @@ function saveCode() {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
             let cont = true;
             if (!f) {
-                fetch('https://137.112.40.92:3000/verify-only', { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain' }, body: textTrim() })
+                fetch(url + 'verify-only', { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain' }, body: textTrim() })
                     .then(res => res.json()).then((res) => {
                         if (res.body != "Result: SUCCESS") {
                             cont = false;
@@ -145,7 +145,7 @@ function saveCode() {
                                 f = r.id;
                                 updateFile(f);
                                 //console.log(r);
-                                fetch('https://137.112.40.92:3000/save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
+                                fetch(url + 'save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
                                     .then(res => res.json()).then((res) => {
                                         if (res.body != "Result: SUCCESS") {
                                             alert(res.body);
@@ -166,7 +166,7 @@ function saveCode() {
                     })
             }
             else {
-                fetch('https://137.112.40.92:3000/save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
+                fetch(url + 'save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
                     .then(res => res.json()).then((res) => {
                         if (res.body != "Result: SUCCESS") {
                             alert(res.body);
@@ -203,7 +203,7 @@ function deleteCode() {
     if (d) {
         if (f) {
             firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-                let r = new Request('https://137.112.40.92:3000/code/' + f, { method: 'DELETE', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken } });
+                let r = new Request(url + 'code/' + f, { method: 'DELETE', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken } });
                 fetch(r)
                     .then(res => {
                         if (res.status == 200) {
@@ -233,7 +233,7 @@ function deleteCode() {
 
 function fetchCode() {
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-        let r = new Request('https://137.112.40.92:3000/code/' + f, { method: 'GET', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken } });
+        let r = new Request(url + 'code/' + f, { method: 'GET', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken } });
         fetch(r)
             .then(res => {
                 console.log(res.status);
