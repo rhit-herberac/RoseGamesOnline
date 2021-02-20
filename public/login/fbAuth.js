@@ -27,6 +27,6 @@ function signInRose() {
             } else {
                 console.log("signInWithCustomToken error", error.message);
             }
-        }).then(()=>{signInController.OnSignIn();});
+        }).then(()=>{signInController.onSignIn();});
     });
 }
