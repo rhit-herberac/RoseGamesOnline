@@ -1,27 +1,78 @@
 const USERS_COLLECTION = 'Users';
 const GAME_COLLECTION = 'GameMetadata';
-
-if (document.querySelector("#mainPage")) {
+if (document.querySelector("#browsePage")) {
     browse_param();
 }
 
+if (document.querySelector("#profileContainer")) {
+    profile_param();
+}
 
-var _ref = firebase.firestore().collection(USERS_COLLECTION);
-let _documentSnapshot;
-let ran = false;
-let _unsubscribe = _ref.orderBy("Email", "desc").limit(50).onSnapshot((querySnapshot) => {
-    console.log("User update!");
-    querySnapshot.forEach((doc) => {
-        let data = doc.data();
-        let segment = doc.Ef.path.segments;
-        let uid = segment[segment.length - 1];
-        if (uid == signInController.getUID() && document.querySelector("#profileContainer")) updateProfile(data);
+if (document.querySelector("#mainPage")) {
+    main_game();
+    main_prof();
+}
+
+function profile_param() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let uid = urlParams.get('id');
+    if (!uid) uid = signInController.getUID();
+    console.log(uid);
+    var _ref = firebase.firestore().collection(USERS_COLLECTION);
+
+    let _unsubscribe = _ref.onSnapshot((querySnapshot) => {
+        console.log("User update!");
+        querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            console.log(data);
+            let segment = doc.Ef.path.segments;
+            let id = segment[segment.length - 1];
+            console.log(id);
+            if (id == uid) updateProfile(data);
+        });
     });
-});
+}
+
+
 
 function updateProfile(data) {
+    console.log("here");
     if (data.photoURL) document.querySelector("#profilePic").src = data.photoURL;
     document.querySelector("#usernameDisplay").innerHTML = data.Name;
+}
+
+function main_prof() {
+    var _ref = firebase.firestore().collection(USERS_COLLECTION).limit(10);
+    let _unsubscribe = _ref.onSnapshot((querySnapshot) => {
+        document.querySelector("#mainProfiles").innerHTML = '';
+        console.log("User update!");
+        querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            let segment = doc.Ef.path.segments;
+            let id = segment[segment.length - 1];
+            createCap(data, id);
+        });
+    });
+}
+
+function createCap(data, id) {
+    let img = "../images/missing.png";
+    if (data.photoURL) img = data.photoURL;
+    document.querySelector("#mainProfiles").innerHTML += `<div><img src=${img}><p><a href="../profile/?id=${id}">${data.Name}</a></p></div>`
+}
+
+function main_game() {
+    document.querySelector("#gameList").innerHTML = '';
+    var _ref = firebase.firestore().collection(GAME_COLLECTION).limit(15);
+    let _unsubscribe = _ref.onSnapshot((querySnapshot) => {
+        console.log("Game update!");
+        querySnapshot.forEach((doc) => {
+            let cur = doc;
+            let data = doc.data();
+            addGame(data, cur);
+        });
+    });
 }
 
 function browse_param() {

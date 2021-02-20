@@ -97,6 +97,9 @@ function updateHeader(){
                     console.log("todo");
                     window.location.href = `../browse/?uid=${signInController.getUID()}`;
                 }
+                document.querySelector("#profile").onclick = (event) => {
+                    window.location.href = `../profile/?id=${signInController.getUID()}`;
+                }
             //}
             //console.log(signInController.onSignIn);
             signInController.onSignIn();

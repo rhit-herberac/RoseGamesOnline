@@ -33,7 +33,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
-#mainPage{
+#mainPage, #browsePage {
     margin-top: 100px;
 }
 
@@ -269,13 +269,17 @@ a {
     margin-bottom: 25px;
 }
 
-#friendContainer {
+#friendContainer, #mainProfiles {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-#friendContainer > div {
+#mainPage {
+    text-align: center;
+}
+
+#friendContainer > div, #mainProfiles > div {
     margin : 15px 30px;
 }
 
