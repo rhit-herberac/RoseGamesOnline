@@ -19,6 +19,7 @@ function profile_param() {
     let uid = urlParams.get('id');
     if (!uid) uid = signInController.getUID();
     console.log(uid);
+    if(uid == null) redirect("/404.shtml", "");
     var _ref = firebase.firestore().collection(USERS_COLLECTION);
 
     let _unsubscribe = _ref.onSnapshot((querySnapshot) => {
