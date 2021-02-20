@@ -9,7 +9,7 @@ if (document.querySelector("#mainPage")) {
 var _ref = firebase.firestore().collection(USERS_COLLECTION);
 let _documentSnapshot;
 let ran = false;
-let _unsubscribe = _ref.orderBy("Email", "desc").limit(50	).onSnapshot((querySnapshot) => {
+let _unsubscribe = _ref.orderBy("Email", "desc").limit(50).onSnapshot((querySnapshot) => {
     console.log("User update!");
     querySnapshot.forEach((doc) => {
         let data = doc.data();
@@ -25,7 +25,7 @@ function updateProfile(data) {
 }
 
 function browse_param() {
-    document.querySelector("#mainPage").innerHTML = '';
+    document.querySelector("#gameList").innerHTML = '';
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get('uid');
@@ -53,8 +53,29 @@ function browse_param() {
 }
 
 function addGame(data, cur) {
-    console.log(data);
-    let seg = cur.Ef.path.segments;
-    let id = seg[seg.length - 1];
-    document.querySelector("#mainPage").innerHTML += `<a href="../game/?id=${id}">${data.Title}</a>`
+    let author = data.Author;
+    author.get().then((a) => {
+
+        let name = a.get("Name");
+        console.log(data);
+        let seg = cur.Ef.path.segments;
+        let id = seg[seg.length - 1];
+        document.querySelector("#gameList").innerHTML += `<div id="card"><a href="../game/?id=${id}"><h3>${data.Title}</h3><a id="aLink" href="../profile/?id=${a.id}">
+    <pre id="author">${name}</pre></a></a><p>${data.Description}</div>`
+    })
+
+}
+
+function updateBtns() {
+    if (document.querySelector("#friendsButton")) {
+        document.querySelector("#friendsButton").onclick = (event) => {
+            window.location.href = "friends.html";
+        }
+    }
+
+    if (document.querySelector("#addFriendButton")) {
+        document.querySelector("#addFriendButton").onclick = (event) => {
+            console.log("todo");
+        }
+    }
 }

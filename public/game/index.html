@@ -24,8 +24,12 @@
 
     <div id="mainPage">
         <div class="titleArea">
-            <h1><pre id="gameTitle">Test Game</pre></h1>
-            <a href="../profile"><pre id="author">Author</pre></a>
+            <h1>
+                <pre id="gameTitle">Test Game</pre>
+            </h1>
+            <a id="aLink" href="../profile">
+                <pre id="author">Author</pre></a>
+            <a id="toEditor" style="display: none">Go to editor</a><br>
         </div>
         <div id="gameAndScore">
             <div id="canvasArea" style="width: 66vw; height: 37vw; position: relative;">
@@ -60,10 +64,12 @@
 
         <div id="gameDescription">
             <h1>Description</h1>
-            <p style="overflow-y: auto;"><pre id="desc">This is a description of the game.</pre></p>
+            <p style="overflow-y: auto;">
+                <pre id="desc">This is a description of the game.</pre>
+            </p>
         </div>
 
-        <div id="commentSection">
+        <div id="commentSection" style="display: none">
             <div id="commentHeader">
                 <a id="commentsTitle">Comments</a>
                 <a id="reportButton">Report this game</a>
@@ -82,17 +88,35 @@
     <script src="/__/firebase/init.js"></script>
     <script src="../scripts/assignButtons.js"></script>
     <script>
-        
+
         let f = new URLSearchParams(window.location.search).get('id');
-        if(!f) document.location.pathname="/404.shtml";
+        if (!f) document.location.pathname = "/404.shtml";
         let doc = firebase.firestore().collection("GameMetadata").doc(f);
 
-        doc.get().then((doc)=>{
-            if(!doc.exists) document.location.pathname="/404.shtml";
+        doc.get().then((doc) => {
+            if (!doc.exists) document.location.pathname = "/404.shtml";
             document.querySelector("#gameTitle").innerHTML = doc.get("Title");
             document.querySelector("#desc").innerHTML = doc.get("Description");
+            let author = doc.get("Author");
+            author.get().then((a) => {
+
+                let name = a.get("Name");
+                document.getElementById("author").innerHTML = name;
+                document.getElementById("aLink").href = "../profile/?id=" + a.id;
+                //signInController.onSignIn = function () {
+                    
+                    //console.log(a.id);
+                    if (signInController.getUID() == a.id) {
+                        console.log(signInController.getUID() == a.id);
+                        document.getElementById("toEditor").style.display="initial";
+                        document.getElementById("toEditor").href="../editor/?id="+f;
+                    }
+                //}
+            })
             //TODO: add comments, dates, tags from doc
         })
+
+
     </script>
 </body>
 

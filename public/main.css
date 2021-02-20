@@ -5,7 +5,9 @@
     --foreground: #000000;
     --faded: #BBBBBB;
 }
-
+#head p{
+    color: var(--bgColor);
+}
 .topNavbar {
     background: var(--highlightColor);
     position: fixed;
@@ -33,6 +35,12 @@
 
 #mainPage{
     margin-top: 100px;
+}
+
+#gameList{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 body {
@@ -282,4 +290,27 @@ a {
 #editorMenu button{
     padding-left: 5%;
     padding-right: 5%;
+}
+
+#card{
+    box-shadow: 2px 2px 5px;
+    width: 200px;
+    text-align: center;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal;
+    height: 200px;
+    margin: 1vw;
+    padding: 1vw;
+    overflow: hidden;
+    display: block;
+}
+
+#card p{
+    height: 4.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal;
+    width: 100%;
 }

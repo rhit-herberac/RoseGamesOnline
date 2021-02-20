@@ -140,40 +140,40 @@ function saveCode() {
                                 updateFile(f);
                                 //console.log(r);
                                 fetch('https://137.112.40.92:3000/save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
-                                .then(res => res.json()).then((res) => {
-                                    if (res.body != "Result: SUCCESS") {
-                                        alert(res.body);
-                                        return false;
-                                    }
-                                    else {
-                                        alert("Code saved.");
+                                    .then(res => res.json()).then((res) => {
+                                        if (res.body != "Result: SUCCESS") {
+                                            alert(res.body);
+                                            return false;
+                                        }
+                                        else {
+                                            alert("Code saved.");
 
-                                        clearBackup();
-                                        //window.localStorage.removeItem('code');
-                                        return true;
-                                    }
-                                })
-                                document.location.search="?id=" + f;
+                                            clearBackup();
+                                            //window.localStorage.removeItem('code');
+                                            return true;
+                                        }
+                                    })
+                                document.location.search = "?id=" + f;
                             });
-                            
+
                         }
                     })
             }
-            else{
-            fetch('https://137.112.40.92:3000/save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
-                .then(res => res.json()).then((res) => {
-                    if (res.body != "Result: SUCCESS") {
-                        alert(res.body);
-                        return false;
-                    }
-                    else {
-                        alert("Code saved.");
+            else {
+                fetch('https://137.112.40.92:3000/save/' + f, { method: 'POST', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken }, body: textTrim() })
+                    .then(res => res.json()).then((res) => {
+                        if (res.body != "Result: SUCCESS") {
+                            alert(res.body);
+                            return false;
+                        }
+                        else {
+                            alert("Code saved.");
 
-                        clearBackup();
-                        //window.localStorage.removeItem('code');
-                        return true;
-                    }
-                })
+                            clearBackup();
+                            //window.localStorage.removeItem('code');
+                            return true;
+                        }
+                    })
             }
 
         }).catch(function (error) {
@@ -190,6 +190,39 @@ function saveCode() {
 function runCode() {
     if (saveCode())
         start();
+}
+
+function deleteCode() {
+    let d = confirm("Are you sure you want to delete this game? This action cannot be undone!!!");
+    if (d) {
+        if (f) {
+            firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+                let r = new Request('https://137.112.40.92:3000/code/' + f, { method: 'DELETE', mode: 'cors', cache: 'no-cache', /*credentials: 'include', */ headers: { 'Content-Type': 'text/plain', 'x-auth': idToken } });
+                fetch(r)
+                    .then(res => {
+                        if (res.status == 200) {
+                            redirect("/", "");
+                        }
+                        else alert("Error occured when deleting. Code " + res.status);
+                    })
+            }).catch(function (error) {
+                alert("Error occured when deleting: " + error);
+            });
+        }
+        else {
+            window.localStorage.setItem("id", "");
+
+            window.localStorage.setItem("title", "");
+            window.localStorage.setItem("desc", "");
+            window.localStorage.setItem("category", "");
+            window.localStorage.setItem("tags", "");
+
+            window.localStorage.setItem("code", "");
+            redirect("/", "");
+
+        }
+    }
+
 }
 
 function fetchCode() {

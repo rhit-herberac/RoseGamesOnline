@@ -334,6 +334,64 @@ app.get('/code/:file', (request, response) => {
             let doc = firestore.collection("GameMetadata").doc(request.params.file);
             let usr = firestore.collection("Users").doc(uid);
             doc.get().then(snap => {
+                try {
+                    if(snap.exists){
+                        if (!fs.existsSync('./jsSourceFiles/' + request.params.file + ".js")) {
+                            response.writeHead(404, {'X-Powered-By': 'None of your business', 'Response': '404' });
+                            response.end();
+                        }
+                        else if(snap.get("Author").path != usr.path){
+                            response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+                            response.end();
+                        }
+                        else{
+                        //response.writeHead(200, )
+                        //console.log("Sending code");
+                        let r = String(fs.readFileSync('./jsSourceFiles/' + request.params.file + ".js"));
+                        //console.log(r)
+                        //response.status(200).send({ 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', 'Response': '200', 'body': r});
+                        //response.setHeader("Content-Type", "text/plain");
+                        response.write(r, () => response.end());
+                        }
+                    }
+                } catch(e){
+                    response.status(400).end();
+                }
+            });
+            
+            
+        })
+        .catch((error) => {
+            console.log(error);
+            response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+            response.end();
+        });
+    } else{
+        response.writeHead(401, {'X-Powered-By': 'None of your business', 'Response': '401' });
+        response.end();
+    }
+})
+
+app.delete('/code/:file', (request, response) => {
+    //console.dir(request.param)
+
+    //set header for POST and GET so there's no issues communicating with Firebase
+    //response.setHeader('Access-Control-Allow-Origin', );
+    //console.log('GET')
+    if (request.params.file == null) {
+        response.writeHead(400, {'X-Powered-By': 'None of your business', 'Response': '400' });
+        response.end();
+    }
+    else if (request.headers['x-auth'] != null){
+        let idToken = request.headers['x-auth'];
+        admin.auth()
+        .verifyIdToken(idToken)
+        .then((decodedToken) => {
+            
+            const uid = decodedToken.uid;
+            let doc = firestore.collection("GameMetadata").doc(request.params.file);
+            let usr = firestore.collection("Users").doc(uid);
+            doc.get().then(snap => {
                 if(snap.exists){
                     if (!fs.existsSync('./jsSourceFiles/' + request.params.file + ".js")) {
                         response.writeHead(404, {'X-Powered-By': 'None of your business', 'Response': '404' });
@@ -346,11 +404,13 @@ app.get('/code/:file', (request, response) => {
                     else{
                     //response.writeHead(200, )
                     //console.log("Sending code");
-                    let r = String(fs.readFileSync('./jsSourceFiles/' + request.params.file + ".js"));
+                    //let r = String(fs.readFileSync('./jsSourceFiles/' + request.params.file + ".js"));
+                    fs.unlinkSync('./jsSourceFiles/' + request.params.file + ".js");
+                    doc.delete();
                     //console.log(r)
                     //response.status(200).send({ 'Content-Type': 'text/plain', 'X-Powered-By': 'None of your business', 'Response': '200', 'body': r});
                     //response.setHeader("Content-Type", "text/plain");
-                    response.write(r, () => response.end());
+                    response.status(200).end();
                     }
                 }
             });

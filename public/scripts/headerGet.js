@@ -89,6 +89,15 @@ function updateHeader(){
             document.getElementById("logInOut").innerHTML = "Log Out";
             document.getElementById("profile").style.visibility = "visible";
             document.getElementById("myGames").style.visibility = "visible";
+            
+        
+            //if (document.querySelector("#myGames")) {
+                //console.log("here");
+                document.querySelector("#myGames").onclick = (event) => {
+                    console.log("todo");
+                    window.location.href = `../browse/?uid=${signInController.getUID()}`;
+                }
+            //}
             //console.log(signInController.onSignIn);
             signInController.onSignIn();
         } else{
