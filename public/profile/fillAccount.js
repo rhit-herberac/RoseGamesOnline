@@ -6,7 +6,7 @@ if (document.querySelector("#browsePage")) {
 
 if (document.querySelector("#profileContainer")) {
     profile_param();
-    main_game();
+    browse_param();
 }
 
 if (document.querySelector("#mainPage")) {
