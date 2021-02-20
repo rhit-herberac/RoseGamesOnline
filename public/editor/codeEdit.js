@@ -2,10 +2,10 @@ let f = new URLSearchParams(window.location.search).get('id');
 
 
 signInController.setOnSignIn(function () {
-    /*if(!signInController.isSignedIn()){
+    if(!signInController.isSignedIn()){
         console.log("Not signed in");
         redirect("/401.shtml", "reason=notSignedIn");
-    }*/
+    }
     //console.log("sdjkflsdj");
     let p = false;
 
