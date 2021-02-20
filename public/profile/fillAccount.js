@@ -67,6 +67,7 @@ function main_game() {
     var _ref = firebase.firestore().collection(GAME_COLLECTION).limit(15);
     let _unsubscribe = _ref.onSnapshot((querySnapshot) => {
         console.log("Game update!");
+        document.querySelector("#gameList").innerHTML = '';
         querySnapshot.forEach((doc) => {
             let cur = doc;
             let data = doc.data();
